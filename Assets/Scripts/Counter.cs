@@ -8,33 +8,32 @@ using UnityEngine.SceneManagement;
 
 public class Counter : MonoBehaviour
 {
-    public Text CounterText;
 
     public bool gameOver;
     public bool gameOn;
     [SerializeField] Button restart;
-    [SerializeField] Button start;
-    [SerializeField] TextMeshProUGUI prediction;
-    [SerializeField] Button plus5;
-    [SerializeField] Button minus5;
     [SerializeField] TextMeshProUGUI ballCountText;
     public TextMeshProUGUI scoreText;
     public Slider power;
     public int score = 0;
-    public int predictionN = 0;
     [SerializeField] GameObject sphere;
     [SerializeField] Camera cam;
     private int ballCount;
     public bool thisShot;
+    public TextMeshProUGUI highScore;
+    public TextMeshProUGUI user;
 
+    private void Awake()
+    {
+        StartGame();
+    }
     private void Start()
     {
-
+        
         ballCountText.gameObject.SetActive(false);
         scoreText.gameObject.SetActive(false);
         score = 0;
         ballCount = 0;
-        prediction.text = "Prediction: " + 0;
         power.gameObject.SetActive(false);
         restart.gameObject.SetActive(false);
         cam = Camera.main;
@@ -53,22 +52,10 @@ public class Counter : MonoBehaviour
         scoreText.gameObject.SetActive(true);
         ballCountText.gameObject.SetActive(true);
         ballCountText.text = "Balls: 10";
-        start.gameObject.SetActive(false);
-        plus5.gameObject.SetActive(false);
-        minus5.gameObject.SetActive(false);
         power.gameObject.SetActive(true);
         StartCoroutine("Balls");
     }
-    public void PredictionUp()
-    {
-        predictionN+=5;
-        prediction.SetText("Prediction: " + predictionN);
-    }
-    public void PredictionDown()
-    {
-        predictionN-=5;
-        prediction.SetText("Prediction: " + predictionN);
-    }
+
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
