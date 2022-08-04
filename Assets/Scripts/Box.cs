@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Box : MonoBehaviour
 {
-    public Counter counter;
+    //public Counter counter;
     // Start is called before the first frame update
     void Start()
     {
-        counter = GameObject.Find("GameManager").GetComponent<Counter>();
+        //counter = GameObject.Find("GameManager").GetComponent<Counter>();
     }
 
     // Update is called once per frame
@@ -20,16 +20,16 @@ public class Box : MonoBehaviour
     {
         if (CompareTag("1"))
         {
-            counter.score += 1;
+            Counter.Instance.score += 1;
         }
         else if (CompareTag("3"))
         {
-            counter.score += 3;
+            Counter.Instance.score += 3;
         }
         if (CompareTag("5"))
         {
-            counter.score += 5;
+            Counter.Instance.score += 5;
         }
-        counter.scoreText.text = "Score: " + counter.score;
+        Counter.Instance.scoreText.text = "Score: " + Counter.Instance.score;
     }
 }

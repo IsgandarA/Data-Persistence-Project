@@ -5,9 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class Counter : MonoBehaviour
 {
+    public static Counter Instance { get; set; }
 
     public bool gameOver;
     public bool gameOn;
@@ -15,17 +17,28 @@ public class Counter : MonoBehaviour
     [SerializeField] TextMeshProUGUI ballCountText;
     public TextMeshProUGUI scoreText;
     public Slider power;
+    public float powerScore;
     public int score = 0;
     [SerializeField] GameObject sphere;
     [SerializeField] Camera cam;
     private int ballCount;
-    public bool thisShot;
-    public TextMeshProUGUI highScore;
-    public TextMeshProUGUI user;
+    //public bool thisShot;
+    public float balll;
+    private GameObject sphere1;
+    private Ball ballScript;
+    public int highScore;
 
     private void Awake()
     {
-        StartGame();
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        power.gameObject.SetActive(true);
+        
+        Instance = this;
+
     }
     private void Start()
     {
@@ -34,13 +47,19 @@ public class Counter : MonoBehaviour
         scoreText.gameObject.SetActive(false);
         score = 0;
         ballCount = 0;
-        power.gameObject.SetActive(false);
+        //power.gameObject.SetActive(false);
         restart.gameObject.SetActive(false);
         cam = Camera.main;
+        StartGame();
     }
     private void Update()
     {
-        if (ballCount == 10)
+        if (ballScript != null)
+        {
+            //powerScore = ballScript.shotPower;
+            power.value = powerScore;
+        }
+        if (ballCount == 6)
         {
             GameOver();
         }
@@ -52,7 +71,7 @@ public class Counter : MonoBehaviour
         scoreText.gameObject.SetActive(true);
         ballCountText.gameObject.SetActive(true);
         ballCountText.text = "Balls: 10";
-        power.gameObject.SetActive(true);
+        //power.gameObject.SetActive(true);
         StartCoroutine("Balls");
     }
 
@@ -63,14 +82,15 @@ public class Counter : MonoBehaviour
     IEnumerator Balls()
     {
         {
-            while (!gameOver & ballCount < 11)
+            while (!gameOver & ballCount < 6)
             {
-                thisShot = false;
-                Instantiate(sphere, new Vector3(17, 6, 0), transform.rotation);
+                sphere1 = (GameObject)GameObject.Instantiate(sphere, new Vector3(0, 3, -17), transform.rotation);
+                ballScript = sphere1.GetComponent<Ball>();
                 ballCount += 1;
-                ballCountText.text = "Balls: " + (11 - ballCount);
-                yield return new WaitUntil(() => thisShot == true);
+                ballCountText.text = "Balls: " + (6 - ballCount);
+                yield return new WaitUntil(() => ballScript.shot == true);
                 yield return new WaitForSeconds(1);
+
             }
         }
         
@@ -78,7 +98,21 @@ public class Counter : MonoBehaviour
     void GameOver()
     {
         gameOver = true;
+        if (score > Menu.Instance.highScoreInt)
+        {
+            Menu.Instance.highScoreInt = score;
+            Menu.Instance.playerScoreHist[Menu.Instance.playerN] = Menu.Instance.highScoreInt;
+            Menu.Instance.SaveScore();
+
+        }
+        Menu.Instance.highScore.text = "High score:" + Menu.Instance.highScoreInt.ToString();
+        Debug.Log(Menu.Instance.playerScoreHist.Keys);
         restart.gameObject.SetActive(true);
+    }
+    public void GoToMenu()
+    {
+        SceneManager.LoadScene(0);
+        Menu.Instance.start.gameObject.SetActive(true);
     }
 
 }
