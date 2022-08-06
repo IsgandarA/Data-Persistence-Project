@@ -59,7 +59,7 @@ public class Counter : MonoBehaviour
             //powerScore = ballScript.shotPower;
             power.value = powerScore;
         }
-        if (ballCount == 6)
+        if (ballCount == 11)
         {
             GameOver();
         }
@@ -82,12 +82,12 @@ public class Counter : MonoBehaviour
     IEnumerator Balls()
     {
         {
-            while (!gameOver & ballCount < 6)
+            while (!gameOver & ballCount < 11)
             {
-                sphere1 = (GameObject)GameObject.Instantiate(sphere, new Vector3(0, 3, -17), transform.rotation);
+                sphere1 = (GameObject)GameObject.Instantiate(sphere, new Vector3(0, 8, -17), transform.rotation);
                 ballScript = sphere1.GetComponent<Ball>();
                 ballCount += 1;
-                ballCountText.text = "Balls: " + (6 - ballCount);
+                ballCountText.text = "Balls: " + (11 - ballCount);
                 yield return new WaitUntil(() => ballScript.shot == true);
                 yield return new WaitForSeconds(1);
 
